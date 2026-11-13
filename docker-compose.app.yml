@@ -1,0 +1,19 @@
+name: tilbot
+services:
+  ollama:
+    build:
+      context: .
+      args:
+        PORT: ${PORT}      
+    restart: unless-stopped
+    environment:
+      MODEL: ${MODEL}
+      PORT: ${PORT}
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - .:/app
+      - ollama:/root/.ollama
+
+volumes:
+  ollama:     

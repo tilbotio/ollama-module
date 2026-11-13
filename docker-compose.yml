@@ -1,0 +1,51 @@
+name: tilbot
+services:
+  yarn-install:
+    extends:
+      file: ../../docker-compose.yml
+      service: yarn-install
+
+  frontend:
+    extends:
+      file: ../../docker-compose.yml
+      service: frontend
+
+  backend:
+    extends:
+      file: ../../docker-compose.yml
+      service: backend
+    networks:
+      tbnetwork:
+      default:
+
+  mongo:
+    extends:
+      file: ../../docker-compose.yml
+      service: mongo
+
+  ollama:
+    build:
+      context: .
+      args:
+        PORT: ${PORT}
+    restart: unless-stopped
+    environment:
+      MODEL: ${MODEL}
+      PORT: ${PORT}
+    networks:
+      tbnetwork:
+    volumes:
+      - .:/app
+      - ollama:/root/.ollama      
+
+networks:
+  tbnetwork:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.99.0.0/16
+      driver: default
+
+volumes:
+  mongodb:
+  ollama:
