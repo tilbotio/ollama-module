@@ -23,7 +23,7 @@ services:
       file: ../../docker-compose.yml
       service: mongo
 
-  ollama:
+  ollama: &ollama
     build:
       context: .
       args:
@@ -36,7 +36,19 @@ services:
       tbnetwork:
     volumes:
       - .:/app
-      - ollama:/root/.ollama      
+      - ollama:/root/.ollama
+    profiles: [""]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+
+  ollama-cpu:
+    <<: *ollama
+    profiles: ["cpu"]
+    deploy: {}
 
 networks:
   tbnetwork:
