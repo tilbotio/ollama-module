@@ -53,7 +53,7 @@ async def get_ollama_response(image: UploadFile = File(None),
     prompt_message = [{"role": "system", "content": prompt}] if prompt else []
     if len(intent_options_parsed) > 0:
         prompt_message = [{"role": "system", "content": f"Find the best matching intent from the provided options: {intent_options_parsed}. If none match, return 'unknown'."}]
-    total_messages = prompt_message + [{"role": "user", "content": user_input}]
+    total_messages = prompt_message + [{"role": "user", "content": user_input}] if user_input != "" else prompt_message
     model_input = history + total_messages if history else total_messages
 
     print(model_input)
