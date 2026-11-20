@@ -1,6 +1,6 @@
 name: tilbot
 services:
-  ollama:
+  ollama: &ollama
     build:
       context: .
       args:
@@ -12,7 +12,19 @@ services:
     networks:
       tbpluginnetwork:
     volumes:
-      - ollama:/root/.ollama      
+      - ollama:/root/.ollama
+    profiles: [""]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+
+  ollama-cpu:
+    <<: *ollama
+    profiles: ["cpu"]
+    deploy: {}
 
 networks:
   tbpluginnetwork:

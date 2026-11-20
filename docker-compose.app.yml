@@ -1,10 +1,10 @@
 name: tilbot
 services:
-  ollama:
+  ollama: &ollama
     build:
       context: .
       args:
-        PORT: ${PORT}      
+        PORT: ${PORT}
     restart: unless-stopped
     environment:
       MODEL: ${MODEL}
@@ -13,7 +13,18 @@ services:
       - ${PORT}:${PORT}
     volumes:
       - ollama:/root/.ollama
+    profiles: [""]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+
+  ollama-cpu:
+    <<: *ollama
+    profiles: ["cpu"]
+    deploy: {}
 
 volumes:
-  ollama:     
-  
+  ollama:
