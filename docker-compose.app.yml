@@ -12,8 +12,8 @@ services:
     ports:
       - ${PORT}:${PORT}
     volumes:
-      - .:/app
       - ollama:/root/.ollama
 
 volumes:
   ollama:     
+  
